@@ -27,8 +27,8 @@ const SUPPORTED_BLOCK_SIZE: u64 = 4096;
 const SHA256_DIGEST_BYTES: u64 = 32;
 
 // Linux block-device ioctl request numbers from <linux/fs.h>.
-const BLKGETSIZE64: libc::c_ulong = 0x8008_1272;
-const BLKROGET: libc::c_ulong = 0x125e;
+const BLKGETSIZE64: libc::Ioctl = 0x8008_1272u32 as libc::Ioctl;
+const BLKROGET: libc::Ioctl = 0x125eu32 as libc::Ioctl;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
