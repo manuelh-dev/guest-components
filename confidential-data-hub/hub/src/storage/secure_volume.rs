@@ -362,7 +362,6 @@ fn open_verity(device_path: &str, name: &str, manifest: &Manifest) -> anyhow::Re
         name,
         device_path,
         v.root_hash.as_str(),
-        "--readonly",
         "--no-superblock",
         "--hash",
         v.algorithm.as_str(),
