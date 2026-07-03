@@ -16,10 +16,15 @@ use ttrpc::{asynchronous::TtrpcContext, Code, Error, Status};
 
 use protos::ttrpc::cdh::{
     api::{
-        GetResourceRequest, GetResourceResponse, ImagePullRequest, ImagePullResponse,
-        SecureMountRequest, SecureMountResponse, UnsealSecretInput, UnsealSecretOutput,
+        ActivateVolumeRequest, ActivateVolumeResponse, DeactivateVolumeRequest,
+        DeactivateVolumeResponse, GetResourceRequest, GetResourceResponse, ImagePullRequest,
+        ImagePullResponse, SecureMountRequest, SecureMountResponse, UnsealSecretInput,
+        UnsealSecretOutput,
     },
-    api_ttrpc::{GetResourceService, ImagePullService, SealedSecretService, SecureMountService},
+    api_ttrpc::{
+        GetResourceService, ImagePullService, SealedSecretService, SecureMountService,
+        SecureVolumeService,
+    },
     keyprovider::{KeyProviderKeyWrapProtocolInput, KeyProviderKeyWrapProtocolOutput},
     keyprovider_ttrpc::KeyProviderService,
 };
@@ -173,6 +178,60 @@ impl SecureMountService for Server {
         let reply = SecureMountResponse::new();
         debug!("[ttRPC CDH] secure mount succeeded.");
         Ok(reply)
+    }
+}
+
+#[async_trait]
+impl SecureVolumeService for Server {
+    async fn activate_volume(
+        &self,
+        _ctx: &TtrpcContext,
+        req: ActivateVolumeRequest,
+    ) -> ::ttrpc::Result<ActivateVolumeResponse> {
+        if !req.has_manifest_uri() {
+            let mut status = Status::new();
+            status.set_code(Code::INVALID_ARGUMENT);
+            status.set_message("manifest_uri configuration source is required".to_string());
+            return Err(Error::RpcStatus(status));
+        }
+
+        let activation = self
+            .hub
+            .activate_volume(&req.device_id, req.manifest_uri())
+            .await
+            .map_err(|e| {
+                let detailed_error = format_error!(e);
+                error!("[ttRPC CDH] Activate Volume:\n{detailed_error}");
+                let mut status = Status::new();
+                status.set_code(Code::INTERNAL);
+                status.set_message(format!("[CDH] [ERROR]: {e}"));
+                Error::RpcStatus(status)
+            })?;
+
+        Ok(ActivateVolumeResponse {
+            activation_id: activation.activation_id,
+            device_path: activation.device_path,
+            ..Default::default()
+        })
+    }
+
+    async fn deactivate_volume(
+        &self,
+        _ctx: &TtrpcContext,
+        req: DeactivateVolumeRequest,
+    ) -> ::ttrpc::Result<DeactivateVolumeResponse> {
+        self.hub
+            .deactivate_volume(&req.activation_id)
+            .await
+            .map_err(|e| {
+                let detailed_error = format_error!(e);
+                error!("[ttRPC CDH] Deactivate Volume:\n{detailed_error}");
+                let mut status = Status::new();
+                status.set_code(Code::INTERNAL);
+                status.set_message(format!("[CDH] [ERROR]: {e}"));
+                Error::RpcStatus(status)
+            })?;
+        Ok(DeactivateVolumeResponse::new())
     }
 }
 

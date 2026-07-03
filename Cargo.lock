@@ -1320,6 +1320,7 @@ dependencies = [
  "config",
  "const_format",
  "crypto",
+ "hex",
  "image-rs",
  "jose-b64",
  "jose-jwa",

@@ -31,6 +31,7 @@ pub struct Hub {
     #[cfg(feature = "ttrpc")]
     aa_client: OnceCell<Option<AttestationAgentServiceClient>>,
     config: CdhConfig,
+    secure_volumes: crate::storage::secure_volume::Manager,
 }
 
 impl Hub {
@@ -48,6 +49,7 @@ impl Hub {
             image_client: OnceCell::const_new(),
             #[cfg(feature = "ttrpc")]
             aa_client: OnceCell::const_new(),
+            secure_volumes: crate::storage::secure_volume::Manager::default(),
         };
 
         hub.init().await?;
@@ -91,6 +93,33 @@ impl DataHub for Hub {
         info!("secure mount called");
         let res = storage.mount().await?;
         Ok(res)
+    }
+
+    async fn activate_volume(
+        &self,
+        device_id: &str,
+        manifest_uri: &str,
+    ) -> Result<crate::storage::secure_volume::Activation> {
+        use crate::storage::secure_volume::{validate_kbs_uri, Manifest};
+        use zeroize::Zeroizing;
+
+        validate_kbs_uri(manifest_uri)?;
+        let manifest_bytes = self.get_resource(manifest_uri.to_string()).await?;
+        let manifest = Manifest::parse(&manifest_bytes)?;
+        let key = self
+            .get_resource(manifest.protection.key_uri.clone())
+            .await?;
+        self.secure_volumes
+            .activate(device_id, &manifest, Zeroizing::new(key))
+            .await
+            .map_err(Into::into)
+    }
+
+    async fn deactivate_volume(&self, activation_id: &str) -> Result<()> {
+        self.secure_volumes
+            .deactivate(activation_id)
+            .await
+            .map_err(Into::into)
     }
 
     async fn pull_image(&self, image_url: &str, bundle_path: &str) -> Result<String> {

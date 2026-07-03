@@ -60,6 +60,7 @@ rand.workspace = true
 resource_uri.path = "../../attestation-agent/deps/resource_uri"
 serde.workspace = true
 serde_json.workspace = true
+hex.workspace = true
 shadow-rs = { workspace = true, optional = true }
 strum = { workspace = true, features = ["derive"] }
 tempfile.workspace = true

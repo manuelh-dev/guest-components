@@ -806,6 +806,598 @@ impl ::protobuf::reflect::ProtobufValue for SecureMountResponse {
     type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
 }
 
+// @@protoc_insertion_point(message:api.ActivateVolumeRequest)
+#[derive(PartialEq,Clone,Default,Debug)]
+pub struct ActivateVolumeRequest {
+    // message fields
+    // @@protoc_insertion_point(field:api.ActivateVolumeRequest.device_id)
+    pub device_id: ::std::string::String,
+    // message oneof groups
+    pub configuration_source: ::std::option::Option<activate_volume_request::Configuration_source>,
+    // special fields
+    // @@protoc_insertion_point(special_field:api.ActivateVolumeRequest.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a ActivateVolumeRequest {
+    fn default() -> &'a ActivateVolumeRequest {
+        <ActivateVolumeRequest as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl ActivateVolumeRequest {
+    pub fn new() -> ActivateVolumeRequest {
+        ::std::default::Default::default()
+    }
+
+    // string manifest_uri = 2;
+
+    pub fn manifest_uri(&self) -> &str {
+        match self.configuration_source {
+            ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(ref v)) => v,
+            _ => "",
+        }
+    }
+
+    pub fn clear_manifest_uri(&mut self) {
+        self.configuration_source = ::std::option::Option::None;
+    }
+
+    pub fn has_manifest_uri(&self) -> bool {
+        match self.configuration_source {
+            ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(..)) => true,
+            _ => false,
+        }
+    }
+
+    // Param is passed by value, moved
+    pub fn set_manifest_uri(&mut self, v: ::std::string::String) {
+        self.configuration_source = ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(v))
+    }
+
+    // Mutable pointer to the field.
+    pub fn mut_manifest_uri(&mut self) -> &mut ::std::string::String {
+        if let ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(_)) = self.configuration_source {
+        } else {
+            self.configuration_source = ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(::std::string::String::new()));
+        }
+        match self.configuration_source {
+            ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(ref mut v)) => v,
+            _ => panic!(),
+        }
+    }
+
+    // Take field
+    pub fn take_manifest_uri(&mut self) -> ::std::string::String {
+        if self.has_manifest_uri() {
+            match self.configuration_source.take() {
+                ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(v)) => v,
+                _ => panic!(),
+            }
+        } else {
+            ::std::string::String::new()
+        }
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(2);
+        let mut oneofs = ::std::vec::Vec::with_capacity(1);
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "device_id",
+            |m: &ActivateVolumeRequest| { &m.device_id },
+            |m: &mut ActivateVolumeRequest| { &mut m.device_id },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_oneof_deref_has_get_set_simpler_accessor::<_, _>(
+            "manifest_uri",
+            ActivateVolumeRequest::has_manifest_uri,
+            ActivateVolumeRequest::manifest_uri,
+            ActivateVolumeRequest::set_manifest_uri,
+        ));
+        oneofs.push(activate_volume_request::Configuration_source::generated_oneof_descriptor_data());
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<ActivateVolumeRequest>(
+            "ActivateVolumeRequest",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for ActivateVolumeRequest {
+    const NAME: &'static str = "ActivateVolumeRequest";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                10 => {
+                    self.device_id = is.read_string()?;
+                },
+                18 => {
+                    self.configuration_source = ::std::option::Option::Some(activate_volume_request::Configuration_source::ManifestUri(is.read_string()?));
+                },
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        if !self.device_id.is_empty() {
+            my_size += ::protobuf::rt::string_size(1, &self.device_id);
+        }
+        if let ::std::option::Option::Some(ref v) = self.configuration_source {
+            match v {
+                &activate_volume_request::Configuration_source::ManifestUri(ref v) => {
+                    my_size += ::protobuf::rt::string_size(2, &v);
+                },
+            };
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        if !self.device_id.is_empty() {
+            os.write_string(1, &self.device_id)?;
+        }
+        if let ::std::option::Option::Some(ref v) = self.configuration_source {
+            match v {
+                &activate_volume_request::Configuration_source::ManifestUri(ref v) => {
+                    os.write_string(2, v)?;
+                },
+            };
+        }
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> ActivateVolumeRequest {
+        ActivateVolumeRequest::new()
+    }
+
+    fn clear(&mut self) {
+        self.device_id.clear();
+        self.configuration_source = ::std::option::Option::None;
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static ActivateVolumeRequest {
+        static instance: ActivateVolumeRequest = ActivateVolumeRequest {
+            device_id: ::std::string::String::new(),
+            configuration_source: ::std::option::Option::None,
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for ActivateVolumeRequest {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("ActivateVolumeRequest").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for ActivateVolumeRequest {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ActivateVolumeRequest {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
+/// Nested message and enums of message `ActivateVolumeRequest`
+pub mod activate_volume_request {
+
+    #[derive(Clone,PartialEq,Debug)]
+    #[non_exhaustive]
+    // @@protoc_insertion_point(oneof:api.ActivateVolumeRequest.configuration_source)
+    pub enum Configuration_source {
+        // @@protoc_insertion_point(oneof_field:api.ActivateVolumeRequest.manifest_uri)
+        ManifestUri(::std::string::String),
+    }
+
+    impl ::protobuf::Oneof for Configuration_source {
+    }
+
+    impl ::protobuf::OneofFull for Configuration_source {
+        fn descriptor() -> ::protobuf::reflect::OneofDescriptor {
+            static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::OneofDescriptor> = ::protobuf::rt::Lazy::new();
+            descriptor.get(|| <super::ActivateVolumeRequest as ::protobuf::MessageFull>::descriptor().oneof_by_name("configuration_source").unwrap()).clone()
+        }
+    }
+
+    impl Configuration_source {
+        pub(in super) fn generated_oneof_descriptor_data() -> ::protobuf::reflect::GeneratedOneofDescriptorData {
+            ::protobuf::reflect::GeneratedOneofDescriptorData::new::<Configuration_source>("configuration_source")
+        }
+    }
+}
+
+// @@protoc_insertion_point(message:api.ActivateVolumeResponse)
+#[derive(PartialEq,Clone,Default,Debug)]
+pub struct ActivateVolumeResponse {
+    // message fields
+    // @@protoc_insertion_point(field:api.ActivateVolumeResponse.activation_id)
+    pub activation_id: ::std::string::String,
+    // @@protoc_insertion_point(field:api.ActivateVolumeResponse.device_path)
+    pub device_path: ::std::string::String,
+    // special fields
+    // @@protoc_insertion_point(special_field:api.ActivateVolumeResponse.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a ActivateVolumeResponse {
+    fn default() -> &'a ActivateVolumeResponse {
+        <ActivateVolumeResponse as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl ActivateVolumeResponse {
+    pub fn new() -> ActivateVolumeResponse {
+        ::std::default::Default::default()
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(2);
+        let mut oneofs = ::std::vec::Vec::with_capacity(0);
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "activation_id",
+            |m: &ActivateVolumeResponse| { &m.activation_id },
+            |m: &mut ActivateVolumeResponse| { &mut m.activation_id },
+        ));
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "device_path",
+            |m: &ActivateVolumeResponse| { &m.device_path },
+            |m: &mut ActivateVolumeResponse| { &mut m.device_path },
+        ));
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<ActivateVolumeResponse>(
+            "ActivateVolumeResponse",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for ActivateVolumeResponse {
+    const NAME: &'static str = "ActivateVolumeResponse";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                10 => {
+                    self.activation_id = is.read_string()?;
+                },
+                18 => {
+                    self.device_path = is.read_string()?;
+                },
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        if !self.activation_id.is_empty() {
+            my_size += ::protobuf::rt::string_size(1, &self.activation_id);
+        }
+        if !self.device_path.is_empty() {
+            my_size += ::protobuf::rt::string_size(2, &self.device_path);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        if !self.activation_id.is_empty() {
+            os.write_string(1, &self.activation_id)?;
+        }
+        if !self.device_path.is_empty() {
+            os.write_string(2, &self.device_path)?;
+        }
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> ActivateVolumeResponse {
+        ActivateVolumeResponse::new()
+    }
+
+    fn clear(&mut self) {
+        self.activation_id.clear();
+        self.device_path.clear();
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static ActivateVolumeResponse {
+        static instance: ActivateVolumeResponse = ActivateVolumeResponse {
+            activation_id: ::std::string::String::new(),
+            device_path: ::std::string::String::new(),
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for ActivateVolumeResponse {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("ActivateVolumeResponse").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for ActivateVolumeResponse {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for ActivateVolumeResponse {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
+// @@protoc_insertion_point(message:api.DeactivateVolumeRequest)
+#[derive(PartialEq,Clone,Default,Debug)]
+pub struct DeactivateVolumeRequest {
+    // message fields
+    // @@protoc_insertion_point(field:api.DeactivateVolumeRequest.activation_id)
+    pub activation_id: ::std::string::String,
+    // special fields
+    // @@protoc_insertion_point(special_field:api.DeactivateVolumeRequest.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a DeactivateVolumeRequest {
+    fn default() -> &'a DeactivateVolumeRequest {
+        <DeactivateVolumeRequest as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl DeactivateVolumeRequest {
+    pub fn new() -> DeactivateVolumeRequest {
+        ::std::default::Default::default()
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(1);
+        let mut oneofs = ::std::vec::Vec::with_capacity(0);
+        fields.push(::protobuf::reflect::rt::v2::make_simpler_field_accessor::<_, _>(
+            "activation_id",
+            |m: &DeactivateVolumeRequest| { &m.activation_id },
+            |m: &mut DeactivateVolumeRequest| { &mut m.activation_id },
+        ));
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<DeactivateVolumeRequest>(
+            "DeactivateVolumeRequest",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for DeactivateVolumeRequest {
+    const NAME: &'static str = "DeactivateVolumeRequest";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                10 => {
+                    self.activation_id = is.read_string()?;
+                },
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        if !self.activation_id.is_empty() {
+            my_size += ::protobuf::rt::string_size(1, &self.activation_id);
+        }
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        if !self.activation_id.is_empty() {
+            os.write_string(1, &self.activation_id)?;
+        }
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> DeactivateVolumeRequest {
+        DeactivateVolumeRequest::new()
+    }
+
+    fn clear(&mut self) {
+        self.activation_id.clear();
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static DeactivateVolumeRequest {
+        static instance: DeactivateVolumeRequest = DeactivateVolumeRequest {
+            activation_id: ::std::string::String::new(),
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for DeactivateVolumeRequest {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("DeactivateVolumeRequest").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for DeactivateVolumeRequest {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for DeactivateVolumeRequest {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
+// @@protoc_insertion_point(message:api.DeactivateVolumeResponse)
+#[derive(PartialEq,Clone,Default,Debug)]
+pub struct DeactivateVolumeResponse {
+    // special fields
+    // @@protoc_insertion_point(special_field:api.DeactivateVolumeResponse.special_fields)
+    pub special_fields: ::protobuf::SpecialFields,
+}
+
+impl<'a> ::std::default::Default for &'a DeactivateVolumeResponse {
+    fn default() -> &'a DeactivateVolumeResponse {
+        <DeactivateVolumeResponse as ::protobuf::Message>::default_instance()
+    }
+}
+
+impl DeactivateVolumeResponse {
+    pub fn new() -> DeactivateVolumeResponse {
+        ::std::default::Default::default()
+    }
+
+    fn generated_message_descriptor_data() -> ::protobuf::reflect::GeneratedMessageDescriptorData {
+        let mut fields = ::std::vec::Vec::with_capacity(0);
+        let mut oneofs = ::std::vec::Vec::with_capacity(0);
+        ::protobuf::reflect::GeneratedMessageDescriptorData::new_2::<DeactivateVolumeResponse>(
+            "DeactivateVolumeResponse",
+            fields,
+            oneofs,
+        )
+    }
+}
+
+impl ::protobuf::Message for DeactivateVolumeResponse {
+    const NAME: &'static str = "DeactivateVolumeResponse";
+
+    fn is_initialized(&self) -> bool {
+        true
+    }
+
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::Result<()> {
+        while let Some(tag) = is.read_raw_tag_or_eof()? {
+            match tag {
+                tag => {
+                    ::protobuf::rt::read_unknown_or_skip_group(tag, is, self.special_fields.mut_unknown_fields())?;
+                },
+            };
+        }
+        ::std::result::Result::Ok(())
+    }
+
+    // Compute sizes of nested messages
+    #[allow(unused_variables)]
+    fn compute_size(&self) -> u64 {
+        let mut my_size = 0;
+        my_size += ::protobuf::rt::unknown_fields_size(self.special_fields.unknown_fields());
+        self.special_fields.cached_size().set(my_size as u32);
+        my_size
+    }
+
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::Result<()> {
+        os.write_unknown_fields(self.special_fields.unknown_fields())?;
+        ::std::result::Result::Ok(())
+    }
+
+    fn special_fields(&self) -> &::protobuf::SpecialFields {
+        &self.special_fields
+    }
+
+    fn mut_special_fields(&mut self) -> &mut ::protobuf::SpecialFields {
+        &mut self.special_fields
+    }
+
+    fn new() -> DeactivateVolumeResponse {
+        DeactivateVolumeResponse::new()
+    }
+
+    fn clear(&mut self) {
+        self.special_fields.clear();
+    }
+
+    fn default_instance() -> &'static DeactivateVolumeResponse {
+        static instance: DeactivateVolumeResponse = DeactivateVolumeResponse {
+            special_fields: ::protobuf::SpecialFields::new(),
+        };
+        &instance
+    }
+}
+
+impl ::protobuf::MessageFull for DeactivateVolumeResponse {
+    fn descriptor() -> ::protobuf::reflect::MessageDescriptor {
+        static descriptor: ::protobuf::rt::Lazy<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::Lazy::new();
+        descriptor.get(|| file_descriptor().message_by_package_relative_name("DeactivateVolumeResponse").unwrap()).clone()
+    }
+}
+
+impl ::std::fmt::Display for DeactivateVolumeResponse {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        ::protobuf::text_format::fmt(self, f)
+    }
+}
+
+impl ::protobuf::reflect::ProtobufValue for DeactivateVolumeResponse {
+    type RuntimeType = ::protobuf::reflect::rt::RuntimeTypeMessage<Self>;
+}
+
 // @@protoc_insertion_point(message:api.ImagePullRequest)
 #[derive(PartialEq,Clone,Default,Debug)]
 pub struct ImagePullRequest {
@@ -1080,16 +1672,26 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     (\tR\x05flags\x12\x1f\n\x0bmount_point\x18\x04\x20\x01(\tR\nmountPoint\
     \x1a:\n\x0cOptionsEntry\x12\x10\n\x03key\x18\x01\x20\x01(\tR\x03key\x12\
     \x14\n\x05value\x18\x02\x20\x01(\tR\x05value:\x028\x01\"\x15\n\x13Secure\
-    MountResponse\"P\n\x10ImagePullRequest\x12\x1b\n\timage_url\x18\x01\x20\
-    \x01(\tR\x08imageUrl\x12\x1f\n\x0bbundle_path\x18\x02\x20\x01(\tR\nbundl\
-    ePath\"<\n\x11ImagePullResponse\x12'\n\x0fmanifest_digest\x18\x01\x20\
-    \x01(\tR\x0emanifestDigest2V\n\x13SealedSecretService\x12?\n\x0cUnsealSe\
-    cret\x12\x16.api.UnsealSecretInput\x1a\x17.api.UnsealSecretOutput2V\n\
-    \x12GetResourceService\x12@\n\x0bGetResource\x12\x17.api.GetResourceRequ\
-    est\x1a\x18.api.GetResourceResponse2V\n\x12SecureMountService\x12@\n\x0b\
-    SecureMount\x12\x17.api.SecureMountRequest\x1a\x18.api.SecureMountRespon\
-    se2N\n\x10ImagePullService\x12:\n\tPullImage\x12\x15.api.ImagePullReques\
-    t\x1a\x16.api.ImagePullResponseb\x06proto3\
+    MountResponse\"q\n\x15ActivateVolumeRequest\x12\x1b\n\tdevice_id\x18\x01\
+    \x20\x01(\tR\x08deviceId\x12#\n\x0cmanifest_uri\x18\x02\x20\x01(\tH\0R\
+    \x0bmanifestUriB\x16\n\x14configuration_source\"^\n\x16ActivateVolumeRes\
+    ponse\x12#\n\ractivation_id\x18\x01\x20\x01(\tR\x0cactivationId\x12\x1f\
+    \n\x0bdevice_path\x18\x02\x20\x01(\tR\ndevicePath\">\n\x17DeactivateVolu\
+    meRequest\x12#\n\ractivation_id\x18\x01\x20\x01(\tR\x0cactivationId\"\
+    \x1a\n\x18DeactivateVolumeResponse\"P\n\x10ImagePullRequest\x12\x1b\n\ti\
+    mage_url\x18\x01\x20\x01(\tR\x08imageUrl\x12\x1f\n\x0bbundle_path\x18\
+    \x02\x20\x01(\tR\nbundlePath\"<\n\x11ImagePullResponse\x12'\n\x0fmanifes\
+    t_digest\x18\x01\x20\x01(\tR\x0emanifestDigest2V\n\x13SealedSecretServic\
+    e\x12?\n\x0cUnsealSecret\x12\x16.api.UnsealSecretInput\x1a\x17.api.Unsea\
+    lSecretOutput2V\n\x12GetResourceService\x12@\n\x0bGetResource\x12\x17.ap\
+    i.GetResourceRequest\x1a\x18.api.GetResourceResponse2V\n\x12SecureMountS\
+    ervice\x12@\n\x0bSecureMount\x12\x17.api.SecureMountRequest\x1a\x18.api.\
+    SecureMountResponse2\xb1\x01\n\x13SecureVolumeService\x12I\n\x0eActivate\
+    Volume\x12\x1a.api.ActivateVolumeRequest\x1a\x1b.api.ActivateVolumeRespo\
+    nse\x12O\n\x10DeactivateVolume\x12\x1c.api.DeactivateVolumeRequest\x1a\
+    \x1d.api.DeactivateVolumeResponse2N\n\x10ImagePullService\x12:\n\tPullIm\
+    age\x12\x15.api.ImagePullRequest\x1a\x16.api.ImagePullResponseb\x06proto\
+    3\
 ";
 
 /// `FileDescriptorProto` object which was a source for this generated file
@@ -1107,13 +1709,17 @@ pub fn file_descriptor() -> &'static ::protobuf::reflect::FileDescriptor {
     file_descriptor.get(|| {
         let generated_file_descriptor = generated_file_descriptor_lazy.get(|| {
             let mut deps = ::std::vec::Vec::with_capacity(0);
-            let mut messages = ::std::vec::Vec::with_capacity(8);
+            let mut messages = ::std::vec::Vec::with_capacity(12);
             messages.push(UnsealSecretInput::generated_message_descriptor_data());
             messages.push(UnsealSecretOutput::generated_message_descriptor_data());
             messages.push(GetResourceRequest::generated_message_descriptor_data());
             messages.push(GetResourceResponse::generated_message_descriptor_data());
             messages.push(SecureMountRequest::generated_message_descriptor_data());
             messages.push(SecureMountResponse::generated_message_descriptor_data());
+            messages.push(ActivateVolumeRequest::generated_message_descriptor_data());
+            messages.push(ActivateVolumeResponse::generated_message_descriptor_data());
+            messages.push(DeactivateVolumeRequest::generated_message_descriptor_data());
+            messages.push(DeactivateVolumeResponse::generated_message_descriptor_data());
             messages.push(ImagePullRequest::generated_message_descriptor_data());
             messages.push(ImagePullResponse::generated_message_descriptor_data());
             let mut enums = ::std::vec::Vec::with_capacity(0);

@@ -23,8 +23,11 @@ use protos::grpc::cdh::{
         image_pull_service_server::{ImagePullService, ImagePullServiceServer},
         sealed_secret_service_server::{SealedSecretService, SealedSecretServiceServer},
         secure_mount_service_server::{SecureMountService, SecureMountServiceServer},
-        GetResourceRequest, GetResourceResponse, ImagePullRequest, ImagePullResponse,
-        SecureMountRequest, SecureMountResponse, UnsealSecretInput, UnsealSecretOutput,
+        secure_volume_service_server::{SecureVolumeService, SecureVolumeServiceServer},
+        ActivateVolumeRequest, ActivateVolumeResponse, DeactivateVolumeRequest,
+        DeactivateVolumeResponse, GetResourceRequest, GetResourceResponse, ImagePullRequest,
+        ImagePullResponse, SecureMountRequest, SecureMountResponse, UnsealSecretInput,
+        UnsealSecretOutput,
     },
     keyprovider::{
         key_provider_service_server::{KeyProviderService, KeyProviderServiceServer},
@@ -117,6 +120,51 @@ impl SecureMountService for Cdh {
         let reply = SecureMountResponse {};
 
         Result::Ok(Response::new(reply))
+    }
+}
+
+#[tonic::async_trait]
+impl SecureVolumeService for Cdh {
+    async fn activate_volume(
+        &self,
+        request: Request<ActivateVolumeRequest>,
+    ) -> Result<Response<ActivateVolumeResponse>, Status> {
+        use protos::grpc::cdh::api::activate_volume_request::ConfigurationSource;
+
+        let request = request.into_inner();
+        let manifest_uri = match request.configuration_source {
+            Some(ConfigurationSource::ManifestUri(uri)) => uri,
+            None => return Err(Status::invalid_argument("manifest_uri is required")),
+        };
+        let activation = self
+            .inner
+            .activate_volume(&request.device_id, &manifest_uri)
+            .await
+            .map_err(|e| {
+                let detailed_error = format_error!(e);
+                error!("[gRPC CDH] Activate Volume failed:\n{detailed_error}");
+                Status::internal(format!("[CDH] [ERROR]: {e}"))
+            })?;
+
+        std::result::Result::Ok(Response::new(ActivateVolumeResponse {
+            activation_id: activation.activation_id,
+            device_path: activation.device_path,
+        }))
+    }
+
+    async fn deactivate_volume(
+        &self,
+        request: Request<DeactivateVolumeRequest>,
+    ) -> Result<Response<DeactivateVolumeResponse>, Status> {
+        self.inner
+            .deactivate_volume(&request.into_inner().activation_id)
+            .await
+            .map_err(|e| {
+                let detailed_error = format_error!(e);
+                error!("[gRPC CDH] Deactivate Volume failed:\n{detailed_error}");
+                Status::internal(format!("[CDH] [ERROR]: {e}"))
+            })?;
+        std::result::Result::Ok(Response::new(DeactivateVolumeResponse {}))
     }
 }
 
@@ -219,6 +267,7 @@ pub async fn start_grpc_service(socket: SocketAddr, inner: Hub) -> Result<()> {
         .add_service(SealedSecretServiceServer::new(service.clone()))
         .add_service(GetResourceServiceServer::new(service.clone()))
         .add_service(SecureMountServiceServer::new(service.clone()))
+        .add_service(SecureVolumeServiceServer::new(service.clone()))
         .add_service(ImagePullServiceServer::new(service.clone()))
         .add_service(KeyProviderServiceServer::new(service))
         .serve(socket)

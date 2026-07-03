@@ -161,6 +161,32 @@ impl Luks2Formatter {
         Ok(())
     }
 
+    /// Open an existing LUKS2 device as a strictly read-only mapping.
+    pub fn open_device_read_only(
+        &self,
+        device_path: &str,
+        name: &str,
+        passphrase: Zeroizing<Vec<u8>>,
+    ) -> anyhow::Result<()> {
+        let args = [
+            "luksOpen",
+            "--readonly",
+            "--type",
+            "luks2",
+            "-d",
+            "-",
+            device_path,
+            name,
+        ];
+
+        run_cryptsetup_stdin(&args, &passphrase).context("cryptsetup read-only luksOpen failed")?;
+        debug!(
+            device_path = device_path,
+            "read-only device activated: {name}"
+        );
+        Ok(())
+    }
+
     /// Close a LUKS2 mapping using the `cryptsetup` binary.
     pub fn close_device(&self, name: &str) -> anyhow::Result<()> {
         let args = ["luksClose", name];

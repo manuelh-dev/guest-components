@@ -29,6 +29,30 @@ message SecureMountRequest {
 
 message SecureMountResponse {}
 
+message ActivateVolumeRequest {
+    // Guest block device in MAJ:MIN form.
+    string device_id = 1;
+
+    oneof configuration_source {
+        // Immutable secure-volume manifest stored in Trustee/KBS.
+        string manifest_uri = 2;
+    }
+}
+
+message ActivateVolumeResponse {
+    // Opaque handle used to release the activation.
+    string activation_id = 1;
+
+    // Activated plaintext block device inside the guest.
+    string device_path = 2;
+}
+
+message DeactivateVolumeRequest {
+    string activation_id = 1;
+}
+
+message DeactivateVolumeResponse {}
+
 message ImagePullRequest {
     string image_url = 1;
     string bundle_path = 2;
@@ -48,6 +72,11 @@ service GetResourceService {
 
 service SecureMountService {
     rpc SecureMount(SecureMountRequest) returns (SecureMountResponse) {};
+}
+
+service SecureVolumeService {
+    rpc ActivateVolume(ActivateVolumeRequest) returns (ActivateVolumeResponse) {};
+    rpc DeactivateVolume(DeactivateVolumeRequest) returns (DeactivateVolumeResponse) {};
 }
 
 service ImagePullService {
