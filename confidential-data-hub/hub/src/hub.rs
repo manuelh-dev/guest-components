@@ -100,15 +100,29 @@ impl DataHub for Hub {
         device_id: &str,
         manifest_uri: &str,
     ) -> Result<crate::storage::secure_volume::Activation> {
-        use crate::storage::secure_volume::{validate_kbs_uri, Manifest};
+        use crate::storage::secure_volume::{
+            validate_kbs_uri, Error as SecureVolumeError, Manifest,
+        };
         use zeroize::Zeroizing;
 
         validate_kbs_uri(manifest_uri)?;
-        let manifest_bytes = self.get_resource(manifest_uri.to_string()).await?;
+        let manifest_bytes = self
+            .get_resource(manifest_uri.to_string())
+            .await
+            .map_err(|e| {
+                SecureVolumeError::Activation(
+                    anyhow::Error::new(e).context("fetch secure-volume manifest"),
+                )
+            })?;
         let manifest = Manifest::parse(&manifest_bytes)?;
         let key = self
             .get_resource(manifest.protection.key_uri.clone())
-            .await?;
+            .await
+            .map_err(|e| {
+                SecureVolumeError::Activation(
+                    anyhow::Error::new(e).context("fetch secure-volume encryption key"),
+                )
+            })?;
         self.secure_volumes
             .activate(device_id, &manifest, Zeroizing::new(key))
             .await
